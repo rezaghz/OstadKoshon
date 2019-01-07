@@ -91,3 +91,19 @@ body {
 .halloweenBat {
     z-index : 10000;
 }
+.hardShipLevel {
+    position: absolute;
+    z-index: 25;
+    top: 255px;
+    /* right: 619px; */
+    margin-left: -114px;
+    margin-right: auto;
+    left: 50%;
+    right: 50%;
+    display: none;
+}
+img.hardship_img {
+    display: block;
+    width: 240px;
+    margin-top: 45px;
+}

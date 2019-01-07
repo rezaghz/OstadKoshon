@@ -5,6 +5,9 @@ $(function () {
     let char1 = $(".char1_img");
     let logo = $(".logo_img");
     let bg_game = $(".bg");
+    let hardshipLevel = $(".hardShipLevel");
+    let hardShipLevelImg = $(".hardship_img");
+    let hardShipLevelScore;
 
     playBtn.addClass('animated slideInLeft');
     char1.addClass('animated slideInDown');
@@ -14,11 +17,11 @@ $(function () {
     xhr.send();
 
     var bg = new Howl({
-        src : ["sound/bg.MP3"],
-        volume:0.5,
-        autoplay:true,
-        loop:true,
-        html5 :true,
+        src: ["sound/bg.MP3"],
+        volume: 0.5,
+        autoplay: true,
+        loop: true,
+        html5: true,
     });
     var shut = new Howl({
         src: ["sound/gun-shut.mp3"],
@@ -26,8 +29,8 @@ $(function () {
     });
 
     var scream = new Howl({
-       volume : 0.7,
-       src : ["sound/scream.mp3"],
+        volume: 0.7,
+        src: ["sound/scream.mp3"],
     });
 
     bg.play();
@@ -42,16 +45,39 @@ $(function () {
         char1.removeClass('animated slideInDown');
         setTimeout(function () {
             playBtn.addClass('animated zoomOutLeft');
-       },200);
+        }, 200);
 
         setTimeout(function () {
-           char1.addClass("animated fadeOutUp");
-        },200);
-
+            char1.addClass("animated fadeOutUp");
+        }, 200);
+        setTimeout(function () {
+            hardshipLevel.css("display", "block");
+            hardshipLevel.addClass('animated jackInTheBox');
+        }, 200);
     });
 
     char1.click(function () {
         scream.play();
+    });
+
+
+    // step 2
+
+    hardShipLevelImg.click(function () {
+        $(this).fadeOut();
+        hardShipLevelScore = $(this).data("id");
+        setTimeout(function () {
+            hardShipLevelImg.addClass('animated bounceOutLeft');
+        },300);
+        logo.removeClass('animated zoomIn');
+        setTimeout(function () {
+            logo.addClass('animated zoomOutUp');
+        },300);
+        setTimeout(function () {
+            backgrorund.css("filter","blur(0px)");
+            bg.stop();
+        },1000);
+
     });
 
 });
@@ -62,7 +88,7 @@ $(function () {
     $.fn.halloweenBats = function (options) {
         var Bat,
             bats = [],
-            $body= $('body'),
+            $body = $('body'),
             innerWidth = $body.innerWidth(),
             innerHeight = $body.innerHeight(),
             counter,
@@ -149,7 +175,7 @@ $(function () {
 
                 self.applyPosition();
 
-                if (Math.random() > 0.95 ) {
+                if (Math.random() > 0.95) {
                     tx = self.randomPosition('horizontal');
                     ty = self.randomPosition('vertical');
                 }
@@ -199,7 +225,7 @@ $(function () {
             bats.push(new Bat());
         }
 
-        $(window).resize(function() {
+        $(window).resize(function () {
             innerWidth = $body.innerWidth();
             innerHeight = $body.innerHeight();
         });
