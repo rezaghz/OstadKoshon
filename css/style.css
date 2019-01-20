@@ -82,12 +82,11 @@ body {
 }
 .char1 img {
     position: absolute;
-    z-index : 3;
-    bottom:0;
-    right:0;
-    width: 700px;
+    z-index: 3;
+    bottom: 0;
+    right: 100px;
+    width: 450px;
 }
-
 .halloweenBat {
     z-index : 10000;
 }
@@ -106,4 +105,21 @@ img.hardship_img {
     display: block;
     width: 240px;
     margin-top: 45px;
+}
+
+.area {
+    position: absolute;
+    display: block;
+    z-index: 250;
+    width: 300px;
+    height: 100px;
+    background-color: red;
+    left: 173px;
+    top: 238px;
+    overflow: hidden;;
+}
+
+.xxx{
+    position: relative;
+
 }

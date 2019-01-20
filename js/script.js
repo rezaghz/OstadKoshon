@@ -1,5 +1,11 @@
 $(function () {
+    function printMousePos(event) {
+        console.log(
+            "clientX: " + event.clientX +
+            " - clientY: " + event.clientY);
+    }
 
+    document.addEventListener("click", printMousePos);
     let backgrorund = $(".background_image");
     let playBtn = $(".play_btn");
     let char1 = $(".char1_img");
@@ -8,6 +14,9 @@ $(function () {
     let hardshipLevel = $(".hardShipLevel");
     let hardShipLevelImg = $(".hardship_img");
     let hardShipLevelScore;
+    const SIZE_CHAR = ["50px", "70px", "80px", "90px", "100px"];
+    const CLIENT_X = ["192px", "220px", "300px", "350px"];
+    const CLIENT_Y = ["100px", "102px", "104px", "106px"];
 
     playBtn.addClass('animated slideInLeft');
     char1.addClass('animated slideInDown');
@@ -40,6 +49,7 @@ $(function () {
         shut.play();
     });
 
+
     playBtn.click(function () {
         playBtn.removeClass('animated slideInLeft');
         char1.removeClass('animated slideInDown');
@@ -60,6 +70,13 @@ $(function () {
         scream.play();
     });
 
+    char1.mousedown(function () {
+        $(this).attr("src", "img/char3.png");
+        $(this).mouseup(function () {
+            $(this).attr("src", "img/char1.png");
+        });
+    });
+
 
     // step 2
 
@@ -68,18 +85,65 @@ $(function () {
         hardShipLevelScore = $(this).data("id");
         setTimeout(function () {
             hardShipLevelImg.addClass('animated bounceOutLeft');
-        },300);
+        }, 300);
         logo.removeClass('animated zoomIn');
         setTimeout(function () {
             logo.addClass('animated zoomOutUp');
-        },300);
+        }, 300);
         setTimeout(function () {
-            backgrorund.css("filter","blur(0px)");
+            backgrorund.css("filter", "blur(0px)");
             bg.stop();
-        },1000);
-
+        }, 1000);
+        startGame(hardShipLevelScore);
     });
 
+    function startGame(levelScore) {
+
+        setInterval(function () {
+            let goal = document.createElement("img");
+            let coordinates = getCoordinates();
+            goal.src = coordinates.char;
+            goal.style.position = "absolute";
+            goal.style.zIndex = "500";
+            //goal.style.left = randomArray(CLIENT_X);
+            goal.style.left = coordinates.left;
+            //goal.style.top = randomArray(CLIENT_Y);
+            goal.style.bottom = coordinates.bottom;
+            goal.style.width = randomArray(SIZE_CHAR);
+            // goal.style.width = "150px";
+            //console.log(goal);
+            //document.body.appendChild(goal);
+            setTimeout(function () {
+                $(goal).appendTo("body").slideDown();
+            }, 10);
+            // $("body").append(goal);
+        }, 1000);
+    }
+
+
+    function getCoordinates() {
+        let rand_number = randomArray(["left","right","bottom"]);
+        let rand_char = randomArray(["img/char1.png","img/char2.png","img/char3.png","img/char4.png"]);
+        if (rand_number === "left") {
+            return {left: rand(180, 440) + "px", bottom: 435 + "px",char:rand_char};
+        }
+        else if (rand_number==="right"){
+            return {left: rand(1040, 1267) + "px", bottom: 435 + "px",char:rand_char};
+        }
+        else {
+            return {left: rand(25, 1428) + "px", bottom: 0 + "px",char:rand_char};
+        }
+    }
+
+    function rand(start, end) {
+        var r = start + Math.floor(Math.random() * (end - start));
+        return r;
+    }
+
+    function randomArray(array) {
+        var rand = array[Math.floor(Math.random() * array.length)];
+        return rand;
+    }
 });
 
 (function ($) {
