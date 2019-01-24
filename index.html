@@ -9,30 +9,39 @@
 <body>
 <div class="bg">
     <div class="background_image">
+        <div class="scoreBoard">
+            <img src="./img/coins.png" alt="" draggable="false" class="coins">
+            <span class="scoreItem" id="score">0</span>
+            <span class="scoreItem">امتیاز</span>
+        </div>
+        <div class="deathBoard">
+            <img src="./img/coffin.png" alt="" draggable="false" class="grave">
+            <span id="graveNumber">0</span>
+        </div>
     </div>
     <div class="logo">
-        <img src="img/logo.png" class="logo_img">
+        <img src="img/logo.png" class="logo_img"  draggable="false">
     </div>
-    <div class="step1_el">
+    <div class="step1_el"  >
         <div class="play">
-            <img src="img/play.png" class="play_btn">
+            <img src="img/play.png" class="play_btn"  draggable="false">
         </div>
         <div class="char1">
-            <img src="img/char1.png" class="char1_img">
+            <img src="img/char1.png" class="char1_img"  draggable="false">
         </div>
     </div>
-    <div class="step2_el">
+    <div class="step2_el" draggable="false">
         <div class="hardShipLevel">
-            <img src="./img/asan.png" data-id="0" alt="آسان" class="hardship_img">
-            <img src="./img/motevaset.png" data-id="1" alt="متوسط" class="hardship_img">
-            <img src="./img/sakht.png" data-id="2" alt="سخت" class="hardship_img">
+            <img src="./img/asan.png" data-id="0" alt="آسان" class="hardship_img"  draggable="false">
+            <img src="./img/motevaset.png" data-id="1" alt="متوسط" class="hardship_img"  draggable="false">
+            <img src="./img/sakht.png" data-id="2" alt="سخت" class="hardship_img"  draggable="false">
         </div>
     </div>
 </div>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/howler.core.min.js"></script>
-<script src="js/halloweenBats.js"></script>
 <script src="js/explosion.js"></script>
 <script src="js/script.js"></script>
+<script src="js/halloweenBats.js"></script>
 </body>
 </html>
