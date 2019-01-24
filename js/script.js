@@ -11,7 +11,7 @@ $(function () {
     let char1 = $(".char1_img");
     let logo = $(".logo_img");
     let bg_game = $(".bg");
-    let hardshipLevel = $(".hardShipLevel");
+    let hardShipLevelDiv = $(".hardShipLevel");
     let hardShipLevelImg = $(".hardship_img");
     let hardShipLevelScore;
     const SIZE_CHAR = ["50px", "70px", "80px", "90px", "100px"];
@@ -42,7 +42,7 @@ $(function () {
     });
     var shut = new Howl({
         src: ["sound/gun-shut.mp3"],
-        volume: 1,
+        volume: 0.6,
     });
 
     var scream = new Howl({
@@ -69,8 +69,8 @@ $(function () {
             char1.addClass("animated fadeOutUp");
         }, 200);
         setTimeout(function () {
-            hardshipLevel.css("display", "block");
-            hardshipLevel.addClass('animated jackInTheBox');
+            hardShipLevelDiv.css("display", "block");
+            hardShipLevelDiv.addClass('animated jackInTheBox');
         }, 200);
     });
 
@@ -101,42 +101,83 @@ $(function () {
         setTimeout(function () {
             backgrorund.css("filter", "blur(0px)");
             bg.stop();
-
         }, 1000);
         startGame(hardShipLevelScore);
     });
 
+
     function startGame(levelScore) {
         setTimeout(function () {
             start.play();
-        },2000);
+        }, 2000);
+        let counterFor = 1;
+        let counterInterVal = 1;
         setInterval(function () {
-            let goal = document.createElement("img");
-            let coordinates = getCoordinates();
-            let id_rand = rand(1,1000);
-            goal.src = coordinates.char;
-            goal.setAttribute("id","char"+id_rand);
-            goal.className = "targetChar";
-            goal.style.position = "absolute";
-            goal.style.zIndex = "500";
-            //goal.style.left = randomArray(CLIENT_X);
-            goal.style.left = coordinates.left;
-            //goal.style.top = randomArray(CLIENT_Y);
-            goal.style.bottom = coordinates.bottom;
-            goal.style.width = randomArray(SIZE_CHAR);
-            // goal.style.width = "150px";
-            //console.log(goal);
-            //document.body.appendChild(goal);
-
-            $(goal).appendTo("body").slideDown();
-            $("body").on("click", "#char"+id_rand, function (e) {
-                shut.play();
-                $(this).hide();
-                explode(e.pageX, e.pageY);
-            });
+            if (counterInterVal%7===0){
+                counterFor+=hardShipSecond().stepCounter;
+            }
+            let i = 0;
+            for (i=0;i<counterFor;i++) {
+                let goal = document.createElement("img");
+                let coordinates = getCoordinates();
+                let id_rand = rand(1, 1000);
+                goal.src = coordinates.char;
+                goal.setAttribute("id", "char" + id_rand);
+                goal.className = "targetChar";
+                goal.style.position = "absolute";
+                goal.style.zIndex = "500";
+                //goal.style.left = randomArray(CLIENT_X);
+                goal.style.left = coordinates.left;
+                //goal.style.top = randomArray(CLIENT_Y);
+                goal.style.bottom = coordinates.bottom;
+                goal.style.width = randomArray(SIZE_CHAR);
+                // goal.style.width = "150px";
+                //console.log(goal);
+                //document.body.appendChild(goal);
+                $(goal).appendTo("body").slideDown();
+                $("body").on("click", "#char" + id_rand, function (e) {
+                    shut.play();
+                    $(this).hide();
+                    $(this).remove();
+                    explode(e.pageX, e.pageY);
+                });
+                hideChar("#char" + id_rand);
+                counterInterVal++;
+            }
             // $("body").append(goal);
-        }, 3000);
+        }, hardShipSecond().add);
     }
+
+    function hideChar(idName) {
+        setTimeout(function () {
+            if ($(idName).length!==0){
+                let OUT_EFFECT = [ "zoomOut fast", "fadeOut faster",];
+                $(idName).addClass("animated " + randomArray(OUT_EFFECT));
+                console.log("pak Shod");
+            }
+            else {
+                console.log("pak nashod");
+            }
+        }, hardShipSecond().remove);
+
+    }
+
+    function hardShipSecond() {
+        // 0 easy | 1 medium | hard 2
+        // Easy
+        if (hardShipLevelScore===0){
+            return {add:3000,remove:3000,stepCounter : 1}
+        }
+        // Medium
+        else if (hardShipLevelScore ===1){
+            return {add :3000,remove:2500,stepCounter:1}
+        }
+        // Hard
+        else {
+            return {add : 3000,remove : 2000,stepCounter:1}
+        }
+    }
+
 
 
     function getCoordinates() {
