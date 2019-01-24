@@ -43,7 +43,7 @@ table {
     border-spacing: 0;
 }
 body {
-    cursor: url(../img/goal.png), auto;
+    cursor: url(../img/goal1.png), auto;
 }
 .background_image {
     background: url("../img/bg.jpg") no-repeat center center fixed;

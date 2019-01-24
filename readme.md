@@ -7,5 +7,13 @@ This Game created on base javascript(Jquery) , HTML , CSS
 
 
 
+explosion.js -> Codepen
+
+https://codepen.io/explosion/pen/zKEovE
+
+halloweenBats.js -> Codepen
+
+https://codepen.io/jezemery/pen/EVywVJ
+
 
 
