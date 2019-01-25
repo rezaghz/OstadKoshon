@@ -22,7 +22,7 @@ $(function () {
     // counter for live character
     let LOSE_COUNTER = 0;
     // death number for finish the game
-    let DEATH_NUMBER = 2;
+    let DEATH_NUMBER = 10;
     // Score for Kill each Teacher
     let SCORE_DEATH = 5;
     // Kill Counter Variable
@@ -62,6 +62,17 @@ $(function () {
         src: ["sound/scream.mp3"],
     });
 
+    var gameoverSound = new Howl({
+        volume: 0.7,
+        src: ["sound/gameover.mp3"],
+    });
+
+    var laugh = new Howl({
+        volume: 0.7,
+        src: ["sound/laugh.mp3"],
+    });
+
+
     bg.play();
     backgrorund.ready(function () {
         bg.play();
@@ -70,6 +81,10 @@ $(function () {
     // Step 1
     bg_game.click(function () {
         shut.play();
+    });
+
+    $("#charGameOver").click(function () {
+       laugh.play();
     });
 
 
@@ -190,8 +205,10 @@ $(function () {
                             Cookies.set('score', parseInt(score.text()), {expires: 100});
                             cookie_score = parseInt(score.text());
                         }
+
                         let gameOver =  $(".gameOver");
                         start.stop();
+                        gameoverSound.play();
                         $("#scoreGameOver").text(cookie_score+" امتیاز");
                         $("#killGameOver").text(KILL_COUNTER+" نفر");
                         $("#sumKillGameOver").text(cookie_killCounter + " نفر");
@@ -219,14 +236,14 @@ $(function () {
                     if (DEATH_NUMBER <= 3) {
                         $(".deathBoard").css("background-color", "#f10202");
                     }
+                    let OUT_EFFECT = ["zoomOut fast", "fadeOut faster"];
+                    $(idName).removeClass();
+                    $(idName).addClass("animated " + randomArray(OUT_EFFECT));
                     if (DEATH_NUMBER <= LOSE_COUNTER) {
                         $("#graveNumber").text(0);
                         resolve('finish');
                         return false;
                     }
-                    let OUT_EFFECT = ["zoomOut fast", "fadeOut faster"];
-                    $(idName).removeClass();
-                    $(idName).addClass("animated " + randomArray(OUT_EFFECT));
                     setTimeout(function () {
                         $(idName).remove();
                     }, 300);
@@ -241,15 +258,15 @@ $(function () {
         // 0 easy | 1 medium | hard 2
         // Easy
         if (hardShipLevelScore === 0) {
-            return {add: 3000, remove: 3000, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
+            return {add: 3000, remove: 3000, stepCounter: 1, numberBats: 8, stepNumberBats: 1}
         }
         // Medium
         else if (hardShipLevelScore === 1) {
-            return {add: 3000, remove: 2500, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
+            return {add: 3000, remove: 2500, stepCounter: 1, numberBats: 8, stepNumberBats: 1}
         }
         // Hard
         else if (hardShipLevelScore === 2) {
-            return {add: 3000, remove: 2000, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
+            return {add: 3000, remove: 2000, stepCounter: 1, numberBats: 8, stepNumberBats: 1}
         }
     }
 
