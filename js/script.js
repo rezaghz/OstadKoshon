@@ -6,6 +6,8 @@ $(function () {
     }
 */
     //document.addEventListener("click", printMousePos);
+    var cookie = Cookies.get('score');
+    console.log(cookie);
     let backgrorund = $(".background_image");
     let playBtn = $(".play_btn");
     let char1 = $(".char1_img");
@@ -21,14 +23,12 @@ $(function () {
     let DEATH_NUMBER = 10;
     $("#graveNumber").text(DEATH_NUMBER);
     const SIZE_CHAR = ["50px", "70px", "80px", "90px", "100px"];
-    const CLIENT_X = ["192px", "220px", "300px", "350px"];
-    const CLIENT_Y = ["100px", "102px", "104px", "106px"];
 
     playBtn.addClass('animated slideInLeft');
     char1.addClass('animated slideInDown');
     logo.addClass('animated zoomIn');
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost/', true); // This line will trigger an error
+    xhr.open('GET', 'http://ostadkoshon.loc/', true); // This line will trigger an error
     xhr.send();
 
     var bg = new Howl({
@@ -121,7 +121,7 @@ $(function () {
         let counterFor = 1;
         let numberBats = hardShipSecond().numberBats;
         let counterInterVal = 1;
-        setInterval(function () {
+        var insertChar = setInterval(function () {
             if (counterInterVal % 7 === 0) {
                 numberBats += hardShipSecond().stepNumberBats;
                 $.fn.halloweenBats({amount: numberBats});
@@ -147,15 +147,27 @@ $(function () {
                 //console.log(goal);
                 //document.body.appendChild(goal);
                 $(goal).appendTo("body").slideDown();
+                var score = $("#score");
                 $("body").on("click", "#char" + id_rand, function (e) {
                     shut.play();
                     $(this).hide();
                     $(this).remove();
-                    let scoreValue = parseInt($("#score").text())+5;
-                   $("#score").text(scoreValue);
+                    let scoreValue = parseInt(score.text())+5;
+                    score.text(scoreValue);
                     explode(e.pageX, e.pageY);
                 });
-                hideChar("#char" + id_rand);
+                hideChar("#char" + id_rand).then(function (done) {
+                   if (done){
+                       var cookie = Cookies.get('score');
+                       if (cookie ===undefined){
+                           Cookies.set('score',parseInt(score.text()),{expires:100});
+                       }
+                       else if (parseInt(score.text())>cookie){
+                           Cookies.set('score',parseInt(score.text()),{expires:100});
+                       }
+                       clearInterval(insertChar);
+                   }
+                });
                 counterInterVal++;
             }
             // $("body").append(goal);
@@ -163,30 +175,28 @@ $(function () {
     }
 
     function hideChar(idName) {
-
-        setTimeout(function () {
-            if ($(idName).length !== 0) {
-                DEATH_NUMBER--;
-                $("#graveNumber").text(DEATH_NUMBER);
-                if (DEATH_NUMBER===3){
-                    $(".deathBoard").css("background-color","#f10202");
+        var promise = new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                if ($(idName).length !== 0) {
+                    DEATH_NUMBER--;
+                    $("#graveNumber").text(DEATH_NUMBER);
+                    if (DEATH_NUMBER===3){
+                        $(".deathBoard").css("background-color","#f10202");
+                    }
+                    if (DEATH_NUMBER===LOSE_COUNTER){
+                        resolve('finish');
+                    }
+                    let OUT_EFFECT = ["zoomOut fast", "fadeOut faster"];
+                    $(idName).removeClass();
+                    $(idName).addClass("animated " + randomArray(OUT_EFFECT));
+                    setTimeout(function () {
+                        $(idName).remove();
+                    },300);
+                    //console.log(idName+" ==> pak Shod");
                 }
-                if (DEATH_NUMBER===LOSE_COUNTER){
-                    alert("you Lose !!! Game Over !!!");
-                }
-                let OUT_EFFECT = ["zoomOut fast", "fadeOut faster"];
-                $(idName).removeClass();
-                $(idName).addClass("animated " + randomArray(OUT_EFFECT));
-                setTimeout(function () {
-                    $(idName).remove();
-                },300);
-                //console.log(idName+" ==> pak Shod");
-            }
-            else {
-                //console.log(idName+ " ==> pak nashod");
-            }
-        }, hardShipSecond().remove);
-
+            }, hardShipSecond().remove);
+        });
+        return promise;
     }
 
     function hardShipSecond() {
