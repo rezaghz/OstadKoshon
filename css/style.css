@@ -63,6 +63,43 @@
     url('../fonts/woff/IRANSansWeb(FaNum).woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
     url('../fonts/ttf/IRANSansWeb(FaNum).ttf') format('truetype');
 }
+
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes rotating {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.rotating {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -243,4 +280,72 @@ img.hardship_img {
     left: 173px;
     top: 238px;
     overflow: hidden;;
+}
+
+.gameOver {
+    position: absolute;
+    z-index: 500000;
+    width: 620px;
+    height: 543px;
+    background-color: rgba(111, 107, 38, 0.95);
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    top: 70px;
+    border-radius: 28px;
+    display: none;
+}
+
+span#falloff {
+    text-align: center;
+    display: block;
+    font-size: 59px;
+    direction: rtl;
+    margin-top: 25px;
+    font-family: IRANSans_Bold;
+    color : #ffd8ab;
+}
+img#charGameOver {
+    width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 40px;
+}
+.showScore {
+    clear: both;
+    text-align: center;
+    margin-top: 30px;
+}
+.showKill{
+    clear: both;
+    text-align: center;
+    margin-top: 30px;
+}
+.showScore p{
+    display: inline;
+    direction: rtl;
+    text-align: center;
+    font-family: IRANSans_Bold;
+    color : #ffd8ab;
+    font-size: 20px;
+}
+
+.showKill p{
+    display: inline;
+    direction: rtl;
+    text-align: center;
+    font-family: IRANSans_Bold;
+    color : #ffd8ab;
+    font-size: 20px;
+}
+.againPlay {
+    clear: both;
+    margin-top: 17px;
+    text-align: center;
+}
+.againPlay img {
+    width: 205px;
+    cursor: pointer;
 }

@@ -6,8 +6,10 @@ $(function () {
     }
 */
     //document.addEventListener("click", printMousePos);
+   // Cookies.remove("killCounter");
     var cookie = Cookies.get('score');
-    console.log(cookie);
+    var killCounter = Cookies.get('killCounter');
+    console.log(cookie,killCounter);
     let backgrorund = $(".background_image");
     let playBtn = $(".play_btn");
     let char1 = $(".char1_img");
@@ -20,7 +22,11 @@ $(function () {
     // counter for live character
     let LOSE_COUNTER = 0;
     // death number for finish the game
-    let DEATH_NUMBER = 10;
+    let DEATH_NUMBER = 2;
+    // Score for Kill each Teacher
+    let SCORE_DEATH = 5;
+    // Kill Counter Variable
+    let KILL_COUNTER = 0;
     $("#graveNumber").text(DEATH_NUMBER);
     const SIZE_CHAR = ["50px", "70px", "80px", "90px", "100px"];
 
@@ -57,6 +63,9 @@ $(function () {
     });
 
     bg.play();
+    backgrorund.ready(function () {
+        bg.play();
+    });
 
     // Step 1
     bg_game.click(function () {
@@ -114,7 +123,7 @@ $(function () {
 
 
     function startGame() {
-        $.fn.halloweenBats({amount:hardShipSecond().numberBats});
+        $.fn.halloweenBats({amount: hardShipSecond().numberBats});
         setTimeout(function () {
             start.play();
         }, 2000);
@@ -137,7 +146,7 @@ $(function () {
                 goal.className = "animated zoomInDown";
                 goal.draggable = false;
                 goal.style.position = "absolute";
-                goal.style.zIndex = "500";
+                goal.style.zIndex = "5";
                 //goal.style.left = randomArray(CLIENT_X);
                 goal.style.left = coordinates.left;
                 //goal.style.top = randomArray(CLIENT_Y);
@@ -149,24 +158,47 @@ $(function () {
                 $(goal).appendTo("body").slideDown();
                 var score = $("#score");
                 $("body").on("click", "#char" + id_rand, function (e) {
+                    KILL_COUNTER++;
                     shut.play();
                     $(this).hide();
                     $(this).remove();
-                    let scoreValue = parseInt(score.text())+5;
-                    score.text(scoreValue);
+                    // if finish the game not work sum score
+                    if (DEATH_NUMBER>0){
+                        let scoreValue = parseInt(score.text()) + SCORE_DEATH;
+                        score.text(scoreValue);
+                    }
                     explode(e.pageX, e.pageY);
                 });
                 hideChar("#char" + id_rand).then(function (done) {
-                   if (done){
-                       var cookie = Cookies.get('score');
-                       if (cookie ===undefined){
-                           Cookies.set('score',parseInt(score.text()),{expires:100});
-                       }
-                       else if (parseInt(score.text())>cookie){
-                           Cookies.set('score',parseInt(score.text()),{expires:100});
-                       }
-                       clearInterval(insertChar);
-                   }
+                    clearInterval(insertChar);
+                    if (done) {
+                        var cookie_score = Cookies.get('score');
+                        var cookie_killCounter = Cookies.get('killCounter');
+                        if (cookie_killCounter === undefined){
+                            Cookies.set('killCounter', KILL_COUNTER, {expires: 100});
+                            cookie_killCounter = KILL_COUNTER;
+                        }
+                        else {
+
+                            cookie_killCounter=parseInt(cookie_killCounter) + KILL_COUNTER;
+                            Cookies.set('killCounter', cookie_killCounter, {expires: 100});
+                        }
+                        if (cookie_score === undefined) {
+                            Cookies.set('score', parseInt(score.text()), {expires: 100});
+                        }
+                        else if (parseInt(score.text()) > cookie_score) {
+                            Cookies.set('score', parseInt(score.text()), {expires: 100});
+                            cookie_score = parseInt(score.text());
+                        }
+                        let gameOver =  $(".gameOver");
+                        start.stop();
+                        $("#scoreGameOver").text(cookie_score+" امتیاز");
+                        $("#killGameOver").text(KILL_COUNTER+" نفر");
+                        $("#sumKillGameOver").text(cookie_killCounter + " نفر");
+                        gameOver.css("display", "block");
+                        gameOver.addClass("animated jackInTheBox");
+                    }
+                    return false;
                 });
                 counterInterVal++;
             }
@@ -174,24 +206,30 @@ $(function () {
         }, hardShipSecond().add);
     }
 
+    $("#againPlay").click(function () {
+       window.location.reload();
+    });
+
     function hideChar(idName) {
         var promise = new Promise(function (resolve, reject) {
             setTimeout(function () {
                 if ($(idName).length !== 0) {
                     DEATH_NUMBER--;
                     $("#graveNumber").text(DEATH_NUMBER);
-                    if (DEATH_NUMBER===3){
-                        $(".deathBoard").css("background-color","#f10202");
+                    if (DEATH_NUMBER <= 3) {
+                        $(".deathBoard").css("background-color", "#f10202");
                     }
-                    if (DEATH_NUMBER===LOSE_COUNTER){
+                    if (DEATH_NUMBER <= LOSE_COUNTER) {
+                        $("#graveNumber").text(0);
                         resolve('finish');
+                        return false;
                     }
                     let OUT_EFFECT = ["zoomOut fast", "fadeOut faster"];
                     $(idName).removeClass();
                     $(idName).addClass("animated " + randomArray(OUT_EFFECT));
                     setTimeout(function () {
                         $(idName).remove();
-                    },300);
+                    }, 300);
                     //console.log(idName+" ==> pak Shod");
                 }
             }, hardShipSecond().remove);
@@ -203,15 +241,15 @@ $(function () {
         // 0 easy | 1 medium | hard 2
         // Easy
         if (hardShipLevelScore === 0) {
-            return {add: 3000, remove: 3000, stepCounter: 1,numberBats : 10,stepNumberBats : 5}
+            return {add: 3000, remove: 3000, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
         }
         // Medium
         else if (hardShipLevelScore === 1) {
-            return {add: 3000, remove: 2500, stepCounter: 1,numberBats : 10,stepNumberBats:7}
+            return {add: 3000, remove: 2500, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
         }
         // Hard
         else if (hardShipLevelScore === 2) {
-            return {add: 3000, remove: 2000, stepCounter: 1,numberBats : 10,stepNumberBats:10}
+            return {add: 3000, remove: 2000, stepCounter: 1, numberBats: 8, stepNumberBats: 5}
         }
     }
 
